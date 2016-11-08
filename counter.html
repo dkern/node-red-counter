@@ -1,0 +1,61 @@
+<script type="text/x-red" data-template-name="counter">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-init"><i class="fa fa-cog"></i> Initial Count</label>
+        <input type="text" id="node-input-init" placeholder="0">
+    </div>
+    <div class="form-row">
+        <label for="node-input-outputs"><i class="fa fa-random"></i> Outputs</label>
+        <select id="node-input-outputs">
+            <option value="1">single (1)</option>
+            <option value="2">split (2)</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="counter">
+    <p>A simple node incrementing a count for each message.</p>
+    <p>By default the counter will be incremented for every inbound message and append the current count to <code>msg.count</code>.</p>
+    <p><strong>Initial Count:</strong><br/>
+    The initial count can be set in the configuration. By default it will be <strong>zero</strong> at start.
+    </p>
+    <p><strong>Output:</strong><br/>
+    There are two output options for the counter value:
+    <ul>
+      <li><strong>single</strong>: The actual count will be appended to <code>msg.count</code> of the original <code>msg</code>.</li>
+      <li><strong>split</strong>: The node will become two outputs, first will return the count as <code>msg.payload</code> and the second returns the untouched original <code>msg</code>.</li>
+    </ul>
+    </p>
+    <p><strong>Control:</strong><br/>
+    It's possible to control the counter with incoming <code>msg</code> properties:
+    <ul>
+      <li><code>msg.increment</code>: counter will be incremented by the given value, instead of <strong>1</strong>.</li>
+      <li><code>msg.decrement</code>: counter will be decremented by the given value.</li>
+      <li><code>msg.reset</code>: if set to <code>true</code> the counter will be reset to the initial count.</li>
+    </ul>
+    </p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType("counter", {
+      category: "function",
+      defaults: {
+          name: {value:""},
+          init: {value:"0",required:false,validate:RED.validators.number()},
+          outputs: {value:"1"}
+      },
+      color:"#e2d96e",
+      inputs: 1,
+      outputs: 1,
+      icon: "counter.png",
+      label: function() {
+          return this.name || "counter";
+      },
+      labelStyle: function() {
+          return this.name ? "node_label_italic" : "";
+      }
+    });
+</script>
