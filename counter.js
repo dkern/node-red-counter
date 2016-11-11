@@ -5,43 +5,75 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
 
         var node = this;
-        this.outputs = config.outputs;
-        this.init = config.init || 0;
+        this.outputs = config.outputs === "1" ? "single" : "split";
+        this.mode = config.mode || "increment";
+        this.init = Number(config.init || 0);
+        this.step = Number(config.step || 1);
         this.count = this.init;
 
         this.on("input", function(msg) {
-            // handle decrement value
-            var decremented = false;
-            if( msg.hasOwnProperty("decrement") ) {
-                var decrement = Number(msg.decrement);
+            // use message parameters
+            if( msg.hasOwnProperty("increment") || msg.hasOwnProperty("decrement") ) {
+                var decremented = false;
 
-                if( !isNaN(decrement) && isFinite(decrement) ) {
-                    node.count -= decrement;
-                    decremented = true;
+                // handle decrement value
+                if( msg.hasOwnProperty("decrement") ) {
+                    var decrement = Number(msg.decrement);
+
+                    if( !isNaN(decrement) && isFinite(decrement) ) {
+                        node.count -= decrement;
+                        decremented = true;
+                    }
+                    else {
+                        this.error("decrement is not a numeric value", msg);
+                    }
+                }
+
+                // handle increment value
+                if( !decremented ) {
+                    var increment = Number(msg.increment || 1);
+
+                    if( !isNaN(increment) && isFinite(increment) ) {
+                        node.count += increment;
+                    }
+                    else {
+                        this.error("increment is not a numeric value", msg);
+                    }
                 }
             }
 
-            // handle increment value
-            if( !decremented ) {
-                var increment = Number(msg.increment || 1);
-                node.count += !isNaN(increment) && isFinite(increment) ? increment : 1;
+            // use default parameters
+            else {
+                if( isNaN(node.step) || !isFinite(node.step) ) {
+                    this.error("step is not a numeric value", msg);
+                }
+
+                if( node.mode === "increment" ) {
+                    node.count += node.step;
+                }
+                else if( node.mode === "decrement" ) {
+                    node.count -= node.step;
+                }
+                else {
+                    this.error("unknown mode '" + node.mode + "'", msg);
+                }
             }
 
             // handle reset
-            if( msg.hasOwnProperty("reset") && msg.reset === true ) {
-                node.count = config.init;
+            if( msg.hasOwnProperty("reset") && msg.reset ) {
+                node.count = node.init;
             }
 
             // single output
-            console.log(node.outputs);
-            if( node.outputs == 1 ) {
+            if( node.outputs === "single" ) {
                 msg.count = node.count;
                 node.send(msg);
-                return;
             }
 
             // split output
-            node.send([{payload: node.count}, msg]);
+            else {
+                node.send([{payload: node.count}, msg]);
+            }
         });
     }
 

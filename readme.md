@@ -5,14 +5,14 @@ node-red-contrib-counter
 [![NPM version](https://badge.fury.io/js/node-red-contrib-counter.svg)](http://www.npmjs.org/package/node-red-contrib-counter)
 [![Dependencies Status](https://david-dm.org/eisbehr-/node-red-counter/status.svg)](https://david-dm.org/eisbehr-/node-red-counter)
 
-A <a href="http://nodered.org" target="_new">Node-RED</a> node to increment a counter.
+A <a href="http://nodered.org" target="_new">Node-RED</a> node to create a counter with messages.
 
 ---
 
 ## Table of Contents
 * [Install](#install)
 * [Usage](#usage)
-  * [Initial Count](#initial-count)
+  * [Configuration](#configuration)
   * [Output](#output)
   * [Control](#control)
 * [Example Flows](#example-flows)
@@ -36,9 +36,12 @@ npm install node-red-contrib-counter
 By default the counter will be incremented for every inbound message and append the current count to `msg.count`.
 
 
-### Initial Count
+### Configuration
 
-The initial count can be set in the configuration. By default it will be `zero` at start.
+- `Initial Count`: The initial count can be set in the configuration. By default it will be `zero` at start.
+- `Default Step`: Default amount that will be incremented or decremented on every incoming message.
+- `Mode`: Determine if count value should be incremented or decremented on every incoming message.
+- `Outputs`: Selects the output format of the counter. _For more info read below._
 
 
 ### Output
@@ -53,7 +56,7 @@ There are two output options for the counter value:
 
 It's possible to control the counter with incoming `msg` properties:
 
-- `msg.increment`: counter will be incremented by the given value, instead of `1`.
+- `msg.increment`: counter will be incremented by the given value.
 - `msg.decrement`: counter will be decremented by the given value.
 - `msg.reset`: if set to `true` the counter will be reset to the initial count.
 

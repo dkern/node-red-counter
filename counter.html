@@ -8,6 +8,17 @@
         <input type="text" id="node-input-init" placeholder="0">
     </div>
     <div class="form-row">
+        <label for="node-input-step"><i class="fa fa-forward"></i> Default Step</label>
+        <input type="text" id="node-input-step" placeholder="1">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mode"><i class="fa fa-tasks"></i> Mode</label>
+        <select id="node-input-mode">
+            <option value="increment">increment</option>
+            <option value="decrement">decrement</option>
+        </select>
+    </div>
+    <div class="form-row">
         <label for="node-input-outputs"><i class="fa fa-random"></i> Outputs</label>
         <select id="node-input-outputs">
             <option value="1">single (1)</option>
@@ -17,24 +28,29 @@
 </script>
 
 <script type="text/x-red" data-help-name="counter">
-    <p>A simple node incrementing a count for each message.</p>
+    <p>A simple node to create a counter with messages.</p>
     <p>By default the counter will be incremented for every inbound message and append the current count to <code>msg.count</code>.</p>
-    <p><strong>Initial Count:</strong><br/>
-    The initial count can be set in the configuration. By default it will be <strong>zero</strong> at start.
+    <p><strong>Configuration</strong><br/>
+    <ul>
+      <li><code>Initial Count</code>: The initial count can be set in the configuration. By default it will be <strong>zero</strong> at start.</li>
+      <li><code>Default Step</code>: Default amount that will be incremented or decremented on every incoming message.</li>
+      <li><code>Mode</code>: Determine if count value should be incremented or decremented on every incoming message.</li>
+      <li><code>Outputs</code>: Selects the output format of the counter. For more info read below.</li>
+    </ul>
     </p>
-    <p><strong>Output:</strong><br/>
+    <p><strong>Output</strong><br/>
     There are two output options for the counter value:
     <ul>
       <li><strong>single</strong>: The actual count will be appended to <code>msg.count</code> of the original <code>msg</code>.</li>
       <li><strong>split</strong>: The node will become two outputs, first will return the count as <code>msg.payload</code> and the second returns the untouched original <code>msg</code>.</li>
     </ul>
     </p>
-    <p><strong>Control:</strong><br/>
+    <p><strong>Control</strong><br/>
     It's possible to control the counter with incoming <code>msg</code> properties:
     <ul>
-      <li><code>msg.increment</code>: counter will be incremented by the given value, instead of <strong>1</strong>.</li>
+      <li><code>msg.increment</code>: counter will be incremented by the given value.</li>
       <li><code>msg.decrement</code>: counter will be decremented by the given value.</li>
-      <li><code>msg.reset</code>: if set to <code>true</code> the counter will be reset to the initial count.</li>
+      <li><code>msg.reset</code>: if set, the counter will be reset to the initial count.</li>
     </ul>
     </p>
 </script>
@@ -44,7 +60,9 @@
       category: "function",
       defaults: {
           name: {value:""},
-          init: {value:"0",required:false,validate:RED.validators.number()},
+          init: {value:"0"},
+          step: {value:"1"},
+          mode: {value:"increment"},
           outputs: {value:"1"}
       },
       color:"#e2d96e",
@@ -56,6 +74,12 @@
       },
       labelStyle: function() {
           return this.name ? "node_label_italic" : "";
+      },
+      oneditprepare: function() {
+          this.init = !this.init ? 0 : this.init;
+          this.step = !this.step ? 1 : this.step;
+          this.mode = !this.mode ? "increment" : this.mode;
+          this.outputs = !this.outputs ? 1 : this.outputs;
       }
     });
 </script>
