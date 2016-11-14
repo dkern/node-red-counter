@@ -58,7 +58,7 @@ It's possible to control the counter with incoming `msg` properties:
 
 - `msg.increment`: counter will be incremented by the given value.
 - `msg.decrement`: counter will be decremented by the given value.
-- `msg.reset`: if set to `true` the counter will be reset to the initial count.
+- `msg.reset`: resets the counter to it's initial count, or to the given value, when it's a number.
 
 
 ## Example Flows

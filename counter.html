@@ -50,7 +50,7 @@
     <ul>
       <li><code>msg.increment</code>: counter will be incremented by the given value.</li>
       <li><code>msg.decrement</code>: counter will be decremented by the given value.</li>
-      <li><code>msg.reset</code>: if set, the counter will be reset to the initial count.</li>
+      <li><code>msg.reset</code>: resets the counter to it's initial count, or to the given value, when it's a number.</li>
     </ul>
     </p>
 </script>
@@ -76,10 +76,10 @@
           return this.name ? "node_label_italic" : "";
       },
       oneditprepare: function() {
-          this.init = !this.init ? 0 : this.init;
-          this.step = !this.step ? 1 : this.step;
-          this.mode = !this.mode ? "increment" : this.mode;
-          this.outputs = !this.outputs ? 1 : this.outputs;
+          this.init = this.init || 0;
+          this.step = this.step || 1;
+          this.mode = this.mode || "increment";
+          this.outputs = this.outputs || 1;
       }
     });
 </script>
