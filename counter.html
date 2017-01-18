@@ -12,6 +12,14 @@
         <input type="text" id="node-input-step" placeholder="1">
     </div>
     <div class="form-row">
+        <label for="node-input-lower"><i class="fa fa-arrow-down"></i> Lower Limit</label>
+        <input type="text" id="node-input-lower" placeholder="unlimited">
+    </div>
+    <div class="form-row">
+        <label for="node-input-upper"><i class="fa fa-arrow-up"></i> Upper Limit</label>
+        <input type="text" id="node-input-upper" placeholder="unlimited">
+    </div>
+    <div class="form-row">
         <label for="node-input-mode"><i class="fa fa-tasks"></i> Mode</label>
         <select id="node-input-mode">
             <option value="increment">increment</option>
@@ -34,6 +42,8 @@
     <ul>
       <li><code>Initial Count</code>: The initial count can be set in the configuration. By default it will be <strong>zero</strong> at start.</li>
       <li><code>Default Step</code>: Default amount that will be incremented or decremented on every incoming message.</li>
+      <li><code>Lower Limit</code>: Optional limitation of the lower count limit. Will add <code>countLowerLimitReached</code> to <code>msg</code> if reached.</li>
+      <li><code>Upper Limit</code>: Optional limitation of the upper count limit. Will add <code>countUpperLimitReached</code> to <code>msg</code> if reached.</li>
       <li><code>Mode</code>: Determine if count value should be incremented or decremented on every incoming message.</li>
       <li><code>Outputs</code>: Selects the output format of the counter. For more info read below.</li>
     </ul>
@@ -42,7 +52,7 @@
     There are two output options for the counter value:
     <ul>
       <li><strong>single</strong>: The actual count will be appended to <code>msg.count</code> of the original <code>msg</code>.</li>
-      <li><strong>split</strong>: The node will become two outputs, first will return the count as <code>msg.payload</code> and the second returns the untouched original <code>msg</code>.</li>
+      <li><strong>split</strong>: The node will become two outputs, first will return the count as <code>msg.payload</code> and possible limitation info, the second returns the untouched original <code>msg</code>.</li>
     </ul>
     </p>
     <p><strong>Control</strong><br/>
@@ -62,6 +72,8 @@
           name: {value:""},
           init: {value:"0"},
           step: {value:"1"},
+          lower: {value:null},
+          upper: {value:null},
           mode: {value:"increment"},
           outputs: {value:"1"}
       },
@@ -78,6 +90,8 @@
       oneditprepare: function() {
           this.init = this.init || 0;
           this.step = this.step || 1;
+          this.lower = this.lower || null;
+          this.upper = this.upper || null;
           this.mode = this.mode || "increment";
           this.outputs = this.outputs || 1;
       }

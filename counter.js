@@ -6,12 +6,17 @@ module.exports = function(RED) {
 
         var node = this;
         this.outputs = config.outputs === "1" ? "single" : "split";
-        this.mode = config.mode || "increment";
         this.init = Number(config.init || 0);
         this.step = Number(config.step || 1);
+        this.lower = config.lower || null;
+        this.upper = config.upper || null;
+        this.mode = config.mode || "increment";
         this.count = this.init;
 
         this.on("input", function(msg) {
+            var lowerLimitReached = false,
+                upperLimitReached = false;
+
             // use message parameters
             if( msg.hasOwnProperty("increment") || msg.hasOwnProperty("decrement") ) {
                 var decremented = false;
@@ -64,15 +69,54 @@ module.exports = function(RED) {
                 node.count = typeof msg.reset == "number" ? msg.reset : node.init;
             }
 
+            // handle lower limit
+            if( node.lower !== null ) {
+                var lower = Number(node.lower);
+
+                if( !isNaN(lower) && isFinite(lower) && node.count < lower ) {
+                    node.count = lower;
+                    lowerLimitReached = true;
+                }
+            }
+
+            // handle upper limit
+            if( node.upper !== null ) {
+                var upper = Number(node.upper);
+
+                if( !isNaN(upper) && isFinite(upper) && node.count > upper ) {
+                    node.count = upper;
+                    upperLimitReached = true;
+                }
+            }
+
             // single output
             if( node.outputs === "single" ) {
                 msg.count = node.count;
+
+                if( lowerLimitReached ) {
+                    msg.countLowerLimitReached = true;
+                }
+
+                if( upperLimitReached ) {
+                    msg.countUpperLimitReached = true;
+                }
+
                 node.send(msg);
             }
 
             // split output
             else {
-                node.send([{payload: node.count}, msg]);
+                var obj = {payload: node.count};
+
+                if( lowerLimitReached ) {
+                    obj.countLowerLimitReached = true;
+                }
+
+                if( upperLimitReached ) {
+                    obj.countUpperLimitReached = true;
+                }
+
+                node.send([obj, msg]);
             }
         });
     }
