@@ -5,7 +5,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
 
         var node = this;
-        this.outputs = config.outputs === "1" ? "single" : "split";
+        this.outputs = config.outputs === 1 ? 1 : 2;
         this.init = Number(config.init || 0);
         this.step = Number(config.step || 1);
         this.lower = config.lower || null;
@@ -90,7 +90,7 @@ module.exports = function(RED) {
             }
 
             // single output
-            if( node.outputs === "single" ) {
+            if( node.outputs === 1 ) {
                 msg.count = node.count;
 
                 if( lowerLimitReached ) {
