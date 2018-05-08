@@ -5,7 +5,7 @@ node-red-contrib-counter
 [![NPM version](https://badge.fury.io/js/node-red-contrib-counter.svg)](http://www.npmjs.org/package/node-red-contrib-counter)
 [![Dependencies Status](https://david-dm.org/eisbehr-/node-red-counter/status.svg)](https://david-dm.org/eisbehr-/node-red-counter)
 
-A <a href="http://nodered.org" target="_new">Node-RED</a> node to create a counter with messages.
+A [Node-RED](http://nodered.org) node to create a counter with messages.
 
 ---
 

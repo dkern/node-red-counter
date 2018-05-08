@@ -5,7 +5,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
 
         var node = this;
-        this.outputs = config.outputs === "1" ? "single" : "split";
+        this.outputs = Number(config.outputs || 1) === 1 ? "single" : "split";
         this.init = Number(config.init || 0);
         this.step = Number(config.step || 1);
         this.lower = config.lower || null;
@@ -66,7 +66,7 @@ module.exports = function(RED) {
 
             // handle reset
             if( msg.hasOwnProperty("reset") && msg.reset ) {
-                node.count = typeof msg.reset == "number" ? msg.reset : node.init;
+                node.count = typeof msg.reset === "number" ? msg.reset : node.init;
             }
 
             // handle lower limit
