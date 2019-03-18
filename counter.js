@@ -65,7 +65,7 @@ module.exports = function(RED) {
             }
 
             // handle reset
-            if( msg.hasOwnProperty("reset") && msg.reset ) {
+            if( msg.hasOwnProperty("reset") &&  typeof msg.reset === "number" ) {
                 node.count = typeof msg.reset === "number" ? msg.reset : node.init;
             }
 
