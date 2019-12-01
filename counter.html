@@ -33,6 +33,13 @@
             <option value="2">split (2)</option>
         </select>
     </div>
+    <div class="form-row">
+        <label for="node-input-show"><i class="fa fa-eye-slash"></i> Counter</label>
+        <select id="node-input-show">
+            <option value="0">do not show (0)</option>
+            <option value="1">show in status label (1)</option>
+        </select>
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="counter">
@@ -46,6 +53,7 @@
       <li><code>Upper Limit</code>: Optional limitation of the upper count limit. Will add <code>countUpperLimitReached</code> to <code>msg</code> if reached.</li>
       <li><code>Mode</code>: Determine if count value should be incremented or decremented on every incoming message.</li>
       <li><code>Outputs</code>: Selects the output format of the counter. For more info read below.</li>
+      <li><code>Counter</code>: Enable the live visualization of the counter value in the node status label.</li>
     </ul>
     </p>
     <p><strong>Output</strong><br/>
@@ -75,7 +83,8 @@
           lower: {value:null},
           upper: {value:null},
           mode: {value:"increment"},
-          outputs: {value:"1"}
+          outputs: {value:"1"},
+          show: {value:"0"}
       },
       color:"#e2d96e",
       inputs: 1,
@@ -94,6 +103,7 @@
           this.upper = this.upper || null;
           this.mode = this.mode || "increment";
           this.outputs = this.outputs || 1;
+          this.show = this.show || 0;
       }
     });
 </script>

@@ -11,7 +11,11 @@ module.exports = function(RED) {
         this.lower = config.lower || null;
         this.upper = config.upper || null;
         this.mode = config.mode || "increment";
+        this.show = Number(config.show || 0);
         this.count = this.init;
+
+        // show initial counter value
+        this.status({text: this.show == 1 ? node.count : ""})
 
         this.on("input", function(msg) {
             var lowerLimitReached = false,
@@ -117,6 +121,11 @@ module.exports = function(RED) {
                 }
 
                 node.send([obj, msg]);
+            }
+
+            // update 'live' counter value on the node status label
+            if (this.show == 1) {
+                this.status({text: node.count})
             }
         });
     }
