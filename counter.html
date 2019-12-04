@@ -40,6 +40,10 @@
             <option value="1">show in status label (1)</option>
         </select>
     </div>
+    <div class="form-row">
+        <label for="node-input-duration"><i class="fa fa-clock-o"></i> Duration</label>
+        <input type="text" id="node-input-duration" placeholder="disabled">
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="counter">
@@ -54,6 +58,7 @@
       <li><code>Mode</code>: Determine if count value should be incremented or decremented on every incoming message.</li>
       <li><code>Outputs</code>: Selects the output format of the counter. For more info read below.</li>
       <li><code>Counter</code>: Enable the live visualization of the counter value in the node status label.</li>
+      <li><code>Duration</code>: TODO DOC  TODO DOC  TODO DOC  TODO DOC  TODO DOC  TODO DOC  TODO DOC  TODO DOC .</li>
     </ul>
     </p>
     <p><strong>Output</strong><br/>
@@ -84,7 +89,8 @@
           upper: {value:null},
           mode: {value:"increment"},
           outputs: {value:"1"},
-          show: {value:"0"}
+          show: {value:"0"},
+          duration: {value:null},
       },
       color:"#e2d96e",
       inputs: 1,
@@ -104,6 +110,7 @@
           this.mode = this.mode || "increment";
           this.outputs = this.outputs || 1;
           this.show = this.show || 0;
+          this.duration = this.duration || null;
       }
     });
 </script>
