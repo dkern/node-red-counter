@@ -11,11 +11,27 @@ module.exports = function(RED) {
         this.lower = config.lower || null;
         this.upper = config.upper || null;
         this.mode = config.mode || "increment";
-        this.count = this.init;
+        this.count_per_topic = {};
 
         this.on("input", function(msg) {
             var lowerLimitReached = false,
                 upperLimitReached = false;
+
+            // Extract topic
+            var topic = "";
+            if ( msg.hasOwnProperty("topic") ) {
+                if ( typeof msg.topic === "string" ) {
+                    topic = msg.topic;
+                }
+                else {
+                    this.error("topic is not a string", msg);
+                }
+            }
+
+            // Initialize counter if required
+            if ( !node.count_per_topic.hasOwnProperty(topic) ) {
+                node.count_per_topic[topic] = this.init
+            }
 
             // use message parameters
             if( msg.hasOwnProperty("increment") || msg.hasOwnProperty("decrement") ) {
@@ -26,7 +42,7 @@ module.exports = function(RED) {
                     var decrement = Number(msg.decrement);
 
                     if( !isNaN(decrement) && isFinite(decrement) ) {
-                        node.count -= decrement;
+                        node.count_per_topic[topic] -= decrement;
                         decremented = true;
                     }
                     else {
@@ -39,7 +55,7 @@ module.exports = function(RED) {
                     var increment = Number(msg.increment || 1);
 
                     if( !isNaN(increment) && isFinite(increment) ) {
-                        node.count += increment;
+                        node.count_per_topic[topic] += increment;
                     }
                     else {
                         this.error("increment is not a numeric value", msg);
@@ -54,10 +70,10 @@ module.exports = function(RED) {
                 }
 
                 if( node.mode === "increment" ) {
-                    node.count += node.step;
+                    node.count_per_topic[topic] += node.step;
                 }
                 else if( node.mode === "decrement" ) {
-                    node.count -= node.step;
+                    node.count_per_topic[topic] -= node.step;
                 }
                 else {
                     this.error("unknown mode '" + node.mode + "'", msg);
@@ -65,16 +81,26 @@ module.exports = function(RED) {
             }
 
             // handle reset
-            if( msg.hasOwnProperty("reset") && msg.reset ) {
-                node.count = typeof msg.reset === "number" ? msg.reset : node.init;
+            if( msg.hasOwnProperty("reset") && msg.reset !== false ) {
+                if ( topic !== "" ) {
+                    node.count_per_topic[topic] = typeof msg.reset === "number" ? msg.reset : node.init;
+                }
+                else {
+                    if (typeof msg.reset !== "number") {
+                        node.count_per_topic = {}
+                    }
+                    else {
+                        Object.keys(node.count_per_topic).forEach(v => node.count_per_topic[v] = msg.reset)
+                    }
+                }
             }
 
             // handle lower limit
             if( node.lower !== null ) {
                 var lower = Number(node.lower);
 
-                if( !isNaN(lower) && isFinite(lower) && node.count < lower ) {
-                    node.count = lower;
+                if( !isNaN(lower) && isFinite(lower) && node.count_per_topic[topic] < lower ) {
+                    node.count_per_topic[topic] = lower;
                     lowerLimitReached = true;
                 }
             }
@@ -83,15 +109,15 @@ module.exports = function(RED) {
             if( node.upper !== null ) {
                 var upper = Number(node.upper);
 
-                if( !isNaN(upper) && isFinite(upper) && node.count > upper ) {
-                    node.count = upper;
+                if( !isNaN(upper) && isFinite(upper) && node.count_per_topic[topic] > upper ) {
+                    node.count_per_topic[topic] = upper;
                     upperLimitReached = true;
                 }
             }
 
             // single output
             if( node.outputs === "single" ) {
-                msg.count = node.count;
+                msg.count = node.count_per_topic[topic];
 
                 if( lowerLimitReached ) {
                     msg.countLowerLimitReached = true;
@@ -106,7 +132,7 @@ module.exports = function(RED) {
 
             // split output
             else {
-                var obj = {payload: node.count};
+                var obj = {payload: node.count_per_topic[topic]};
 
                 if( lowerLimitReached ) {
                     obj.countLowerLimitReached = true;
