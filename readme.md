@@ -1,9 +1,9 @@
 node-red-contrib-counter
 ========================
 
-[![GitHub version](https://badge.fury.io/gh/eisbehr-%2Fnode-red-counter.svg)](http://github.com/eisbehr-/node-red-counter)
+[![GitHub version](https://badge.fury.io/gh/dkern%2Fnode-red-counter.svg)](http://github.com/dkern/node-red-counter)
 [![NPM version](https://badge.fury.io/js/node-red-contrib-counter.svg)](http://www.npmjs.org/package/node-red-contrib-counter)
-[![Dependencies Status](https://david-dm.org/eisbehr-/node-red-counter/status.svg)](https://david-dm.org/eisbehr-/node-red-counter)
+[![Dependencies Status](https://david-dm.org/dkern/node-red-counter/status.svg)](https://david-dm.org/dkern/node-red-counter)
 
 A [Node-RED](http://nodered.org) node to create a counter with messages.
 
@@ -81,7 +81,7 @@ Simple example showing how to use the counter and it's output.
 
 
 ## Bugs / Feature request
-Please [report](http://github.com/eisbehr-/node-red-counter/issues) bugs and feel free to [ask](http://github.com/eisbehr-/node-red-counter/issues) for new features directly on GitHub.
+Please [report](http://github.com/dkern/node-red-counter/issues) bugs and feel free to [ask](http://github.com/dkern/node-red-counter/issues) for new features directly on GitHub.
 
 
 ## License
