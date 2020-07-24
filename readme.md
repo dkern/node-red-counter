@@ -35,6 +35,7 @@ npm install node-red-contrib-counter
 
 By default the counter will be incremented for every inbound message and append the current count to `msg.count`.
 
+This works on a per msg.topic basis. This means that a single counter node can handle multiple topics at the same time.
 
 ### Configuration
 
@@ -60,7 +61,8 @@ It's possible to control the counter with incoming `msg` properties:
 
 - `msg.increment`: counter will be incremented by the given value.
 - `msg.decrement`: counter will be decremented by the given value.
-- `msg.reset`: resets the counter to it's initial count, or to the given value, when it's a number.
+- `msg.topic`: if specified the counter will work on a per topic basis.
+- `msg.reset`: resets the counter to it's initial count, or to the given value, when it's a number (if msg.topic is not specified the counter will reset all known topics).
 
 
 ## Example Flows
