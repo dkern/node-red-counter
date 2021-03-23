@@ -11,7 +11,17 @@ module.exports = function(RED) {
         this.lower = config.lower || null;
         this.upper = config.upper || null;
         this.mode = config.mode || "increment";
+        this.show = Number(config.show || 0);
+        this.duration = Number(config.duration || 0) * 1000;
+        this.timer = null;
         this.count = this.init;
+
+        // show initial counter value
+        this.status({
+            text: node.show ? node.count : "",
+            shape: node.show && node.duration ? "dot" : null,
+            fill: node.show && node.duration ? "grey" : null,
+        });
 
         this.on("input", function(msg) {
             var lowerLimitReached = false,
@@ -118,6 +128,41 @@ module.exports = function(RED) {
 
                 node.send([obj, msg]);
             }
+
+            // clear any pending timer
+            if ( node.timer ) {
+                clearTimeout(node.timer);
+                node.timer = null;
+            }
+
+            // update 'live' counter value on the node status label
+            if ( node.show || node.duration ) {
+                node.status({
+                    text: node.show ? node.count : "",
+                    shape: node.duration ? 'dot' : null,
+                    fill: node.duration ? 'blue' : null
+                });
+            }
+
+            // blink the status icon for a certain time
+            if ( node.duration ) {
+                node.timer = setTimeout(() => {
+                    node.status({
+                        text: node.show ? node.count : "",
+                        shape: node.show ? 'dot' : null,
+                        fill: node.show ? 'grey' : null
+                    });
+                    node.timer = null;
+                }, node.duration);
+            }
+        });
+
+         this.on("close", function() {
+            if ( node.timer ) {
+                clearTimeout(node.timer);
+                node.timer = null;
+            }
+            node.status({});
         });
     }
 
