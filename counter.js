@@ -65,8 +65,15 @@ module.exports = function(RED) {
             }
 
             // handle reset
-            if( msg.hasOwnProperty("reset") && msg.reset ) {
-                node.count = typeof msg.reset === "number" ? msg.reset : node.init;
+            if( msg.hasOwnProperty("reset")) {
+                if (typeof msg.reset === "number") {
+                    node.count = msg.reset;
+                } else {
+                    node.count = node.init;
+                }
+                if( !msg.hasOwnProperty("payload")) {
+                    return;
+                }
             }
 
             // handle lower limit
