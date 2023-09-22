@@ -2,7 +2,7 @@
   "name": "@cymplecy/node-red-counter",
   "version": "1.0.0",
   "description": "A Node-RED node to create a counter with messages.",
-  "contributors" : [
+  "contributors" : 
   {
     "name": "Daniel 'Eisbehr' Kern",
     "email": "jquery@eisbehr.de",
