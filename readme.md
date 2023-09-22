@@ -1,4 +1,4 @@
-@cycmplecy/node-red-counter
+@cymplecy/node-red-counter
 ========================
 
 Forked from node-red-contrib-counter to fix small bug and alter behviour of a msg.reset command
