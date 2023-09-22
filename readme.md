@@ -1,7 +1,7 @@
 @cymplecy/node-red-counter
 ========================
 
-Forked from node-red-contrib-counter to fix small bug and alter behviour of a msg.reset command
+Forked from node-red-contrib-counter to fix small bug and alter behaviour of a msg.reset command
 Original node by Daniel Kern https://github.com/dkern/node-red-counter
 
 A [Node-RED](http://nodered.org) node to create a counter with messages.
